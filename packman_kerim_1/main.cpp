@@ -48,27 +48,27 @@ void processEvents(RenderWindow & window, Direction & direction)
 
 void update(CircleShape & shape, Direction & direction)
 {
-	const float STEP = 0.2f;
+    const float STEP = 0.2f;
 
-	Vector2f position = shape.getPosition();
-	switch (direction)
-	{
-	case UP :
-		position.y -= STEP;
-		break;
-	case DOWN :
-		position.y += STEP;
-		break;
-	case LEFT :
-		position.x -= STEP;
-		break;
-	case RIGHT :
-		position.x += STEP;
-		break;
-	default:
-		break;
-	}
-	shape.setPosition(position);
+    Vector2f position = shape.getPosition();
+    switch (direction)
+    {
+    case UP :
+        position.y -= STEP;
+        break;
+    case DOWN :
+        position.y += STEP;
+        break;
+    case LEFT :
+        position.x -= STEP;
+        break;
+    case RIGHT :
+        position.x += STEP;
+        break;
+    default:
+        break;
+    }
+    shape.setPosition(position);
 }
 
 void render(RenderWindow & window, CircleShape & shape)

@@ -1,11 +1,42 @@
-#include <iostream>
+#include <SFML/Graphics.hpp>
 
-using namespace std;
-
-int main(int argc, char *argv[])
+void initializePackman(sf::CircleShape & shape)
 {
-    (void)argc;
-    (void)argv;
-    cout << "Hello World!" << endl;
+    shape.setRadius(20);
+    shape.setFillColor(sf::Color::Green);
+    shape.setPosition(100, 0);
+}
+
+void handleEvents(sf::RenderWindow & window)
+{
+    sf::Event event;
+    while (window.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+        {
+            window.close();
+        }
+    }
+}
+
+void render(sf::RenderWindow & window, sf::CircleShape & shape)
+{
+    window.clear();
+    window.draw(shape);
+    window.display();
+}
+
+int main(int, char *[])
+{
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Window Title");
+    sf::CircleShape packman;
+    initializePackman(packman);
+
+    while (window.isOpen())
+    {
+        handleEvents(window);
+        render(window, packman);
+    }
+
     return 0;
 }
