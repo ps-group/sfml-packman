@@ -38,22 +38,24 @@ void initializeField(Field &field)
     field.width = FIELD_WIDTH;
     field.height = FIELD_HEIGHT;
     field.rects = new sf::RectangleShape[field.width * field.height];
-    for (size_t i = 0; i < field.height; i++)
+    for (size_t y = 0; y < field.height; y++)
     {
-        for (size_t j = 0; j < field.width; j++)
+        for (size_t x = 0; x < field.width; x++)
         {
-            sf::RectangleShape & rect = field.rects[i * field.width + j];
-            rect.setPosition(j * BLOCK_SIZE, i * BLOCK_SIZE);
-            rect.setSize(sf::Vector2f(BLOCK_SIZE, BLOCK_SIZE));
-
-            if (FIELD_MAZE[i * field.width + j] == 1)
+            const size_t offset = x + y * field.width;
+            sf::Color color;
+            if (FIELD_MAZE[offset] == 1)
             {
-                rect.setFillColor(BROWN_COLOR);
+                color = BROWN_COLOR;
             }
             else
             {
-                rect.setFillColor(WHITE_COLOR);
+                color = WHITE_COLOR;
             }
+            sf::RectangleShape &rect = field.rects[offset];
+            rect.setPosition(x * BLOCK_SIZE, y * BLOCK_SIZE);
+            rect.setSize(sf::Vector2f(BLOCK_SIZE, BLOCK_SIZE));
+            rect.setFillColor(color);
         }
     }
 }

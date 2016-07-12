@@ -9,5 +9,5 @@ struct Field
 };
 
 void initializeField(Field &field);
-void destroyField(Field &field);
 void drawField(sf::RenderWindow &window, const Field &field);
+void destroyField(Field &field);

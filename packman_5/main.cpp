@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "packman.h"
-#include "field.h"
+#include "gamescene.h"
 
 void handleEvents(sf::RenderWindow & window)
 {
@@ -15,37 +14,32 @@ void handleEvents(sf::RenderWindow & window)
     }
 }
 
-void update(sf::Clock &clock, Packman &packman, const Field &field)
+void update(sf::Clock &clock, GameScene &scene)
 {
     const float elapsedTime = clock.getElapsedTime().asSeconds();
     clock.restart();
-    updatePackman(packman, elapsedTime, field);
+    updateGameScene(scene, elapsedTime);
 }
 
-void render(sf::RenderWindow & window, const Packman &packman, const Field &field)
+void render(sf::RenderWindow & window, const GameScene &scene)
 {
     window.clear();
-    drawField(window, field);
-    // пакман рисуется после поля.
-    window.draw(packman.shape);
+    drawGameScene(window, scene);
     window.display();
 }
 
 int main(int, char *[])
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Window Title");
-    Packman packman;
-    initializePackman(packman);
-    Field field;
-    initializeField(field);
-
     sf::Clock clock;
+    GameScene scene;
+    initializeGameScene(scene);
 
     while (window.isOpen())
     {
         handleEvents(window);
-        update(clock, packman, field);
-        render(window, packman, field);
+        update(clock, scene);
+        render(window, scene);
     }
 
     return 0;

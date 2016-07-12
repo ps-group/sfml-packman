@@ -6,7 +6,7 @@ static const size_t FIELD_HEIGHT = 24;
 
 static const char FIELD_MAZE[] =
         "################################"
-        "#     #                        #"
+        "#     #                     P  #"
         "#     #                        #"
         "#     #                        #"
         "#  @  #                        #"
@@ -17,16 +17,16 @@ static const char FIELD_MAZE[] =
         "#                  #           #"
         "#                  #           #"
         "############       #           #"
+        "#                  #        B  #"
         "#                  #           #"
-        "#                  #           #"
-        "#                  #           #"
+        "#    I             #           #"
         "#                  #           #"
         "#                  #           #"
         "#                  #           #"
         "#             ############     #"
         "#                              #"
         "#                              #"
-        "#                              #"
+        "#             C                #"
         "#                              #"
         "################################";
 
@@ -38,21 +38,46 @@ static sf::FloatRect moveRect(const sf::FloatRect &rect, sf::Vector2f &offset)
     return {rect.left + offset.x, rect.top + offset.y, rect.width, rect.height};
 }
 
-// Находит символ '@' в исходной карте лабиринта.
-sf::Vector2f getPackmanStartPosition()
+// Находит символ `marker` в исходной карте лабиринта.
+static sf::Vector2f getStartPosition(char marker)
 {
     for (size_t y = 0; y < FIELD_HEIGHT; y++)
     {
         for (size_t x = 0; x < FIELD_WIDTH; x++)
         {
             const size_t offset = x + y * FIELD_WIDTH;
-            if (FIELD_MAZE[offset] == '@')
+            if (FIELD_MAZE[offset] == marker)
             {
                 return { x * BLOCK_SIZE, y * BLOCK_SIZE };
             }
         }
     }
     return { 0, 0 };
+}
+
+sf::Vector2f getPackmanStartPosition()
+{
+    return getStartPosition('@');
+}
+
+sf::Vector2f getBlinkyStartPosition()
+{
+    return getStartPosition('B');
+}
+
+sf::Vector2f getPinkyStartPosition()
+{
+    return getStartPosition('P');
+}
+
+sf::Vector2f getInkyStartPosition()
+{
+    return getStartPosition('I');
+}
+
+sf::Vector2f getClydeStartPosition()
+{
+    return getStartPosition('C');
 }
 
 void initializeField(Field &field)

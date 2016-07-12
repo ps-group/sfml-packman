@@ -2,7 +2,7 @@
 
 static const sf::Color PACKMAN_COLOR = sf::Color(255, 216, 0);
 static const float PACKMAN_SPEED = 120.f; // pixels per second.
-static const float PACKMAN_RADIUS = 20.f; // pixels
+static const float PACKMAN_RADIUS = 12.5f; // pixels
 static const sf::Vector2f PACKMAN_INITIAL_POSITION = {110, 110}; // pixels.
 
 void initializePackman(Packman &packman)

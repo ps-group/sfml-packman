@@ -66,3 +66,8 @@ void updatePackman(Packman &packman, float elapsedTime, const Field &field)
     }
     packman.shape.move(movement);
 }
+
+void drawPackman(sf::RenderWindow &window, const Packman &packman)
+{
+    window.draw(packman.shape);
+}
