@@ -26,3 +26,7 @@ target_link_libraries(packman_4 ${PROJECT_LIBS})
 aux_source_directory(packman_5 SRC_LIST_5)
 add_executable(packman_5 ${SRC_LIST_5})
 target_link_libraries(packman_5 ${PROJECT_LIBS})
+
+aux_source_directory(packman_6 SRC_LIST_6)
+add_executable(packman_6 ${SRC_LIST_6})
+target_link_libraries(packman_6 ${PROJECT_LIBS})
