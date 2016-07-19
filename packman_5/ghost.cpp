@@ -3,7 +3,7 @@
 
 static const sf::Color GHOST_COLOR = sf::Color(200, 32, 200);
 static const float GHOST_SPEED = 60.f; // pixels per second.
-static const float GHOST_RADIUS = 12.5f; // pixels
+static const float GHOST_RADIUS = 16.f; // pixels
 
 static void changeGhostDirection(Ghost &ghost)
 {

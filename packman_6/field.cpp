@@ -1,43 +1,44 @@
 #include "field.h"
 
-static const float BLOCK_SIZE = 25.f;
+static const float BLOCK_SIZE = 32.f;
 static const float COOKIE_RADIUS = 2.f;
 static const float SUPERCOOKIE_RADIUS = 5.f;
-static const size_t FIELD_WIDTH = 32;
-static const size_t FIELD_HEIGHT = 24;
+static const size_t FIELD_WIDTH = 25;
+static const size_t FIELD_HEIGHT = 25;
 
 static const char WALL_MARKER = '#';
 static const char COOKIE_MARKER = ' ';
 static const char SUPERCOOKIE_MARKER = '$';
 static const char FIELD_MAZE[] =
-        "################################"
-        "#     #                     P  #"
-        "#     #                        #"
-        "#     #                        #"
-        "#  @  #                        #"
-        "#                              #"
-        "#           ####################"
-        "#    $                         #"
-        "#                              #"
-        "#                  #           #"
-        "#                  #           #"
-        "############       #           #"
-        "#                  #        B  #"
-        "# $                #           #"
-        "#    I             #           #"
-        "#                  #           #"
-        "#                  #           #"
-        "#                  #           #"
-        "#             ############     #"
-        "#                              #"
-        "#                              #"
-        "#             C                #"
-        "#                              #"
-        "################################";
+        " ####################### "
+        " #          #          # "
+        " # ## ##### # ##### ## # "
+        " #                     # "
+        " # ## # ######### # ## # "
+        " #    #     #     #    # "
+        " #### ##### # ##### #### "
+        "    # #     C     # #    "
+        "##### # # ##### # # #####"
+        "#       # #BPI# #       #"
+        "##### # # ##### # # #####"
+        "    # #           # #    "
+        " #### # ######### # #### "
+        " #          #          # "
+        " # ## ##### # ##### ## # "
+        " #  #           @   #  # "
+        " ## # # ######### # #  # "
+        " #    #     #     #    # "
+        " # ####### ### ####### # "
+        " # #     #     #     # # "
+        " # # ### ## # ## ### # # "
+        " # # #      #      # # # "
+        " # # # #### # #### # # # "
+        " #          #          # "
+        " ####################### ";
 
-static const sf::Color WALL_COLOR = sf::Color(52, 93, 169);
-static const sf::Color WHITE_COLOR = sf::Color(255, 255, 255);
-static const sf::Color COOKIE_COLOR = sf::Color(240, 80, 80);
+static const sf::Color WALL_COLOR = sf::Color(52, 93, 199);
+static const sf::Color ROAD_COLOR = sf::Color(40, 40, 40);
+static const sf::Color COOKIE_COLOR = sf::Color(255, 255, 255);
 
 struct FieldGraphics
 {
@@ -51,7 +52,7 @@ void initFieldGraphics(FieldGraphics &graphics)
 {
     graphics.wallShape.setFillColor(WALL_COLOR);
     graphics.wallShape.setSize({BLOCK_SIZE, BLOCK_SIZE});
-    graphics.roadShape.setFillColor(WHITE_COLOR);
+    graphics.roadShape.setFillColor(ROAD_COLOR);
     graphics.roadShape.setSize({BLOCK_SIZE, BLOCK_SIZE});
     graphics.cookieShape.setRadius(COOKIE_RADIUS);
     graphics.cookieShape.setFillColor(COOKIE_COLOR);
@@ -214,6 +215,7 @@ bool checkFieldWallsCollision(const Field &field, const sf::FloatRect &oldBounds
             }
             changed = true;
             newBounds = moveRect(oldBounds, movement);
+            break;
         }
     }
     return changed;

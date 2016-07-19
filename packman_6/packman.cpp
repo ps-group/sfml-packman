@@ -3,7 +3,7 @@
 
 static const sf::Color PACKMAN_COLOR = sf::Color(255, 216, 0);
 static const float PACKMAN_SPEED = 120.f; // pixels per second.
-static const float PACKMAN_RADIUS = 12.5f; // pixels
+static const float PACKMAN_RADIUS = 16.0f; // pixels
 
 static void updatePackmanDirection(Packman &packman)
 {

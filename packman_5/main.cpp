@@ -30,7 +30,7 @@ void render(sf::RenderWindow & window, const GameScene &scene)
 
 int main(int, char *[])
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Window Title");
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Window Title");
     sf::Clock clock;
     GameScene scene;
     initializeGameScene(scene);
