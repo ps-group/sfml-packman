@@ -1,6 +1,11 @@
 #include "field.h"
+#include "packman.h"
+#include <cmath>
+#include <limits>
 
 static const float BLOCK_SIZE = 32.f;
+static const float EPSILON = std::numeric_limits<float>::epsilon();
+static const float MAX_SHIFT = 0.5f * BLOCK_SIZE;
 static const size_t FIELD_WIDTH = 25;
 static const size_t FIELD_HEIGHT = 25;
 
@@ -37,6 +42,51 @@ static const sf::Color WHITE_COLOR = sf::Color(255, 255, 255);
 static sf::FloatRect moveRect(const sf::FloatRect &rect, sf::Vector2f &offset)
 {
     return {rect.left + offset.x, rect.top + offset.y, rect.width, rect.height};
+}
+
+static float getBottom(const sf::FloatRect &rect)
+{
+    return rect.top + rect.height;
+}
+
+static float getRight(const sf::FloatRect &rect)
+{
+    return rect.left + rect.width;
+}
+
+static bool isBetween(float value, float minValue, float maxValue)
+{
+    return (value >= minValue) && (value <= maxValue);
+}
+
+static Direction selectShiftDirection(float leftShift, float rightShift,
+                                      float topShift, float bottomShift,
+                                      float minShift, float maxShift)
+{
+    Direction result = Direction::NONE;
+    float bestShift = FIELD_WIDTH * BLOCK_SIZE;
+    if (isBetween(leftShift, minShift, maxShift) && (leftShift < bestShift))
+    {
+        result = Direction::LEFT;
+        bestShift = leftShift;
+    }
+    if (isBetween(rightShift, minShift, maxShift) && (rightShift < bestShift))
+    {
+        result = Direction::RIGHT;
+        bestShift = rightShift;
+    }
+    if (isBetween(topShift, minShift, maxShift) && (topShift < bestShift))
+    {
+        result = Direction::UP;
+        bestShift = topShift;
+    }
+    if (isBetween(bottomShift, minShift, maxShift) && bottomShift < bestShift)
+    {
+        result = Direction::DOWN;
+        bestShift = bottomShift;
+    }
+
+    return result;
 }
 
 // Находит символ `marker` в исходной карте лабиринта.
@@ -138,21 +188,35 @@ bool checkFieldWallsCollision(const Field &field, const sf::FloatRect &oldBounds
         sf::FloatRect blockBound = cell.bounds.getGlobalBounds();
         if (newBounds.intersects(blockBound))
         {
-            if (movement.y < 0)
+            const float bottomShift = getBottom(blockBound) - newBounds.top;
+            const float topShift = getBottom(newBounds) - blockBound.top;
+            const float rightShift = getRight(blockBound) - newBounds.left;
+            const float leftShift = getRight(newBounds) - blockBound.left;
+            const float movementShift = std::max(std::abs(movement.x), std::abs(movement.y));
+
+            Direction direction = selectShiftDirection(leftShift, rightShift,
+                                                       topShift, bottomShift,
+                                                       movementShift + EPSILON, MAX_SHIFT);
+            if (direction == Direction::NONE)
             {
-                movement.y += blockBound.top + blockBound.height - newBounds.top;
+                direction = selectShiftDirection(leftShift, rightShift,
+                                                 topShift, bottomShift,
+                                                 0, MAX_SHIFT);
             }
-            else if (movement.y > 0)
+            switch (direction)
             {
-                movement.y -= newBounds.top + newBounds.height - blockBound.top;
-            }
-            if (movement.x < 0)
-            {
-                movement.x += blockBound.left + blockBound.width - newBounds.left;
-            }
-            else if (movement.x > 0)
-            {
-                movement.x -= newBounds.left + newBounds.width - blockBound.left;
+            case Direction::UP:
+                movement.y -= topShift;
+                break;
+            case Direction::DOWN:
+                movement.y += bottomShift;
+                break;
+            case Direction::LEFT:
+                movement.x -= leftShift;
+                break;
+            case Direction::RIGHT:
+                movement.x += rightShift;
+                break;
             }
             changed = true;
             newBounds = moveRect(oldBounds, movement);
