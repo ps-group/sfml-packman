@@ -217,6 +217,8 @@ bool checkFieldWallsCollision(const Field &field, const sf::FloatRect &oldBounds
             case Direction::RIGHT:
                 movement.x += rightShift;
                 break;
+            case Direction::NONE:
+                break;
             }
             changed = true;
             newBounds = moveRect(oldBounds, movement);
