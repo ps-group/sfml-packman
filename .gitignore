@@ -252,3 +252,6 @@ paket-files/
 .idea/
 *.sln.iml
 3.5.1
+CMakeFiles
+CMakeCache.txt
+/build/cmake_install.cmake
