@@ -32,9 +32,10 @@ void initializePackman(Packman &packman)
     packman.shape.setRadius(PACKMAN_RADIUS);
     packman.shape.setFillColor(PACKMAN_COLOR);
     packman.shape.setPosition(getPackmanStartPosition());
+    packman.eatenCookies = 0;
 }
 
-void updatePackman(Packman &packman, float elapsedTime, const Field &field)
+void updatePackman(Packman &packman, float elapsedTime, Field &field)
 {
     const float step = PACKMAN_SPEED * elapsedTime;
 
@@ -58,12 +59,12 @@ void updatePackman(Packman &packman, float elapsedTime, const Field &field)
     case Direction::NONE:
         break;
     }
-    const sf::FloatRect packmanBounds = packman.shape.getGlobalBounds();
-    if (checkFieldWallsCollision(field, packmanBounds, movement))
+    if (checkFieldWallsCollision(field, packman.shape.getGlobalBounds(), movement))
     {
         // Останавливаем пакмана при столкновении
         packman.direction = Direction::NONE;
     }
+    packman.eatenCookies += eatAllCookiesInBounds(field, packman.shape.getGlobalBounds());
     packman.shape.move(movement);
 }
 

@@ -6,6 +6,7 @@
 static const float BLOCK_SIZE = 32.f;
 static const float EPSILON = std::numeric_limits<float>::epsilon();
 static const float MAX_SHIFT = 0.5f * BLOCK_SIZE;
+static const float MIN_COOKIE_OVERLAP_AREA = 400.f;
 static const size_t FIELD_WIDTH = 25;
 static const size_t FIELD_HEIGHT = 25;
 
@@ -13,34 +14,35 @@ static const float COOKIE_RADIUS = 2.f;
 static const float SUPERCOOKIE_RADIUS = 5.f;
 
 static const char WALL_MARKER = '#';
+static const char UNREACHABLE_MARKER = '!';
 static const char COOKIE_MARKER = ' ';
 static const char SUPERCOOKIE_MARKER = '$';
 static const char FIELD_MAZE[] =
-        " ####################### "
-        " #          #          # "
-        " # ## ##### # ##### ## # "
-        " #                     # "
-        " # ## # ######### # ## # "
-        " #    #     #     #    # "
-        " #### ##### # ##### #### "
-        "    # #     C     # #    "
+        "!#######################!"
+        "!#          #          #!"
+        "!# ## ##### # ##### ## #!"
+        "!#                     #!"
+        "!# ## # ######### # ## #!"
+        "!#    #     #     #    #!"
+        "!#### ##### # ##### ####!"
+        "!!!!# #     C     # #!!!!"
         "##### # # ##### # # #####"
         "#       # #BPI# #       #"
         "##### # # ##### # # #####"
-        "    # #           # #    "
-        " #### # ######### # #### "
-        " #          #          # "
-        " # ## ##### # ##### ## # "
-        " #  #           @   #  # "
-        " ## # # ######### # #  # "
-        " #    #     #     #    # "
-        " # ####### ### ####### # "
-        " # #     #     #     # # "
-        " # # ### ## # ## ### # # "
-        " # # #      #      # # # "
-        " # # # #### # #### # # # "
-        " #          #          # "
-        " ####################### ";
+        "!!!!# #           # #!!!!"
+        "!#### # ######### # ####!"
+        "!#          #          #!"
+        "!# ## ##### # ##### ## #!"
+        "!#  #           @   #  #!"
+        "!## # # ######### # #  #!"
+        "!# $  #     #     #    #!"
+        "!# ####### ### ####### #!"
+        "!# #     #     #     # #!"
+        "!# # ### ## # ## ### # #!"
+        "!# # #      #      # # #!"
+        "!# # # #### # #### # # #!"
+        "!#          #          #!"
+        "!#######################!";
 
 static const sf::Color WALL_COLOR = sf::Color(52, 93, 199);
 static const sf::Color ROAD_COLOR = sf::Color(40, 40, 40);
@@ -69,6 +71,11 @@ void initFieldGraphics(FieldGraphics &graphics)
 static sf::FloatRect moveRect(const sf::FloatRect &rect, sf::Vector2f &offset)
 {
     return {rect.left + offset.x, rect.top + offset.y, rect.width, rect.height};
+}
+
+static float getArea(const sf::FloatRect &rect)
+{
+    return rect.width * rect.height;
 }
 
 static float getBottom(const sf::FloatRect &rect)
@@ -172,6 +179,9 @@ void initializeField(Field &field)
             sf::Color color;
             switch (FIELD_MAZE[offset])
             {
+            case UNREACHABLE_MARKER:
+                category = CellCategory::EMPTY;
+                break;
             case WALL_MARKER:
                 category = CellCategory::WALL;
                 break;
@@ -286,6 +296,30 @@ bool checkFieldWallsCollision(const Field &field, const sf::FloatRect &oldBounds
         }
     }
     return changed;
+}
+
+unsigned eatAllCookiesInBounds(Field &field, const sf::FloatRect &bounds)
+{
+    unsigned cookiesCount = 0;
+    for (size_t i = 0, n = field.width * field.height; i < n; i++)
+    {
+        Cell &cell = field.cells[i];
+        if (cell.category != CellCategory::COOKIE
+                && cell.category != CellCategory::SUPERCOOKIE)
+        {
+            continue;
+        }
+        sf::FloatRect intersection;
+        // Нужно не просто пересекаться с печеньем, но и иметь
+        // достаточную площадь пересечения.
+        if (cell.bounds.intersects(bounds, intersection)
+                && (getArea(intersection) >= MIN_COOKIE_OVERLAP_AREA))
+        {
+            ++cookiesCount;
+            cell.category = CellCategory::EMPTY;
+        }
+    }
+    return cookiesCount;
 }
 
 void destroyField(Field &field)
