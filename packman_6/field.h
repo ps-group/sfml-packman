@@ -28,9 +28,13 @@ sf::Vector2f getPinkyStartPosition();
 sf::Vector2f getInkyStartPosition();
 sf::Vector2f getClydeStartPosition();
 
+// Возвращает количество оставшегося печенья.
+unsigned countRemainingCookies(const Field &field);
+
+// Возвращает количество поглощённого печенья.
+unsigned eatAllCookiesInBounds(Field &field, const sf::FloatRect &bounds);
+
 void initializeField(Field &field);
 void drawField(sf::RenderWindow &window, const Field &field);
 bool checkFieldWallsCollision(const Field &field, const sf::FloatRect &oldBounds, sf::Vector2f &movement);
-// Возвращает количество поглощённого печенья.
-unsigned eatAllCookiesInBounds(Field &field, const sf::FloatRect &bounds);
 void destroyField(Field &field);

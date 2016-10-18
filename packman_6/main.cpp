@@ -30,7 +30,7 @@ void render(sf::RenderWindow & window, const GameScene &scene)
 
 int main(int, char *[])
 {
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Window Title");
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Packman");
     sf::Clock clock;
     GameScene scene;
     initializeGameScene(scene);
@@ -39,6 +39,7 @@ int main(int, char *[])
     {
         handleEvents(window);
         update(clock, scene);
+        window.setTitle(getGameSceneWindowTitle(scene));
         render(window, scene);
     }
 
