@@ -3,5 +3,5 @@
 
 namespace utils
 {
-void CenterizeTextOrigin(sf::Text &text);
+void centerizeTextOrigin(sf::Text &text);
 }

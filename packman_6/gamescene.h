@@ -8,7 +8,8 @@
 enum class GameState
 {
     Playing,
-    Lose,
+    PlayerLosed,
+    PlayerWon,
 };
 
 struct GameScene
@@ -16,7 +17,8 @@ struct GameScene
     Field field;
     Packman packman;
     std::map<GhostId, Ghost> ghosts;
-    GameState gameState = GameState::Playing;
+    GameState gameState;
+    unsigned totalCookieCount;
 
     sf::Font arial;
     sf::RectangleShape gameOverBackground;
@@ -25,5 +27,6 @@ struct GameScene
 
 void initializeGameScene(GameScene &scene, const sf::Vector2f &sceneSize);
 void updateGameScene(GameScene &scene, float elapsedTime);
+std::string getGameSceneWindowTitle(const GameScene &scene);
 void drawGameScene(sf::RenderWindow &window, const GameScene &scene);
 void destroyGameScene(GameScene &scene);

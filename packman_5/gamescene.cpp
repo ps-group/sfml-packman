@@ -37,7 +37,7 @@ void initializeGameScene(GameScene &scene, const sf::Vector2f &sceneSize)
     scene.gameOverLabel.setColor(sf::Color::Black);
     scene.gameOverLabel.setPosition(0.5f * sceneSize);
     scene.gameOverLabel.setString("Game Over! You lose.");
-    utils::CenterizeTextOrigin(scene.gameOverLabel);
+    utils::centerizeTextOrigin(scene.gameOverLabel);
 }
 
 void updateGameScene(GameScene &scene, float elapsedTime)

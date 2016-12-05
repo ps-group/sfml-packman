@@ -33,11 +33,13 @@ struct Field
 sf::Vector2f getPackmanStartPosition();
 sf::Vector2f getGhostStartPosition(GhostId ghostId);
 
-void initializeField(Field &field);
-void drawField(sf::RenderWindow &window, const Field &field);
-bool checkFieldWallsCollision(const Field &field, const sf::FloatRect &oldBounds, sf::Vector2f &movement);
+// Возвращает количество оставшегося печенья.
+unsigned countRemainingCookies(const Field &field);
 
 // Возвращает количество поглощённого печенья.
 unsigned eatAllCookiesInBounds(Field &field, const sf::FloatRect &bounds);
 
+void initializeField(Field &field);
+void drawField(sf::RenderWindow &window, const Field &field);
+bool checkFieldWallsCollision(const Field &field, const sf::FloatRect &oldBounds, sf::Vector2f &movement);
 void destroyField(Field &field);

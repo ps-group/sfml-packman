@@ -32,7 +32,7 @@ int main(int, char *[])
 {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 4;
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Packman Game Clone", sf::Style::Close, settings);
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Packman Game Clone", sf::Style::Close, settings);
 
     sf::Clock clock;
     GameScene scene;

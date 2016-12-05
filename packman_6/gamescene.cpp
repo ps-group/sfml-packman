@@ -4,7 +4,7 @@
 
 static const sf::Color TRANSPARENT_GRAY = sf::Color(200, 200, 200, 200);
 
-static void InitializeGhostById(std::map<GhostId, Ghost> &ghosts, GhostId ghostId)
+static void initializeGhostById(std::map<GhostId, Ghost> &ghosts, GhostId ghostId)
 {
     // В C++ `operator[]` для контейнеров STL создаёт запись,
     //  если переданного ключа ещё нет в map.
@@ -12,6 +12,17 @@ static void InitializeGhostById(std::map<GhostId, Ghost> &ghosts, GhostId ghostI
     //  если переданного ключа ещё нет в map.
     Ghost &ghost = ghosts[ghostId];
     initializeGhost(ghost, getGhostStartPosition(ghostId));
+}
+
+static unsigned getRemainingCookies(const GameScene &scene)
+{
+    return scene.totalCookieCount - scene.packman.eatenCookies;
+}
+
+static void updateGameOverLabel(sf::Text &label, const std::string &text)
+{
+    label.setString(text);
+    utils::centerizeTextOrigin(label);
 }
 
 void initializeGameScene(GameScene &scene, const sf::Vector2f &sceneSize)
@@ -25,10 +36,14 @@ void initializeGameScene(GameScene &scene, const sf::Vector2f &sceneSize)
 
     initializeField(scene.field);
     initializePackman(scene.packman);
-    InitializeGhostById(scene.ghosts, GhostId::BLINKY);
-    InitializeGhostById(scene.ghosts, GhostId::PINKY);
-    InitializeGhostById(scene.ghosts, GhostId::INKY);
-    InitializeGhostById(scene.ghosts, GhostId::CLYDE);
+
+    initializeGhostById(scene.ghosts, GhostId::BLINKY);
+    initializeGhostById(scene.ghosts, GhostId::PINKY);
+    initializeGhostById(scene.ghosts, GhostId::INKY);
+    initializeGhostById(scene.ghosts, GhostId::CLYDE);
+
+    scene.gameState = GameState::Playing;
+    scene.totalCookieCount = countRemainingCookies(scene.field);
 
     scene.gameOverBackground.setFillColor(TRANSPARENT_GRAY);
     scene.gameOverBackground.setSize(sceneSize);
@@ -36,8 +51,6 @@ void initializeGameScene(GameScene &scene, const sf::Vector2f &sceneSize)
     scene.gameOverLabel.setFont(scene.arial);
     scene.gameOverLabel.setColor(sf::Color::Black);
     scene.gameOverLabel.setPosition(0.5f * sceneSize);
-    scene.gameOverLabel.setString("Game Over! You lose.");
-    utils::CenterizeTextOrigin(scene.gameOverLabel);
 }
 
 void updateGameScene(GameScene &scene, float elapsedTime)
@@ -55,15 +68,46 @@ void updateGameScene(GameScene &scene, float elapsedTime)
             updateGhost(pair.second, elapsedTime, scene.field);
         }
 
+        // Проверяем условие поражения - столкновение пакмана и призрака.
         const sf::FloatRect packmanBounds = getPackmanBounds(scene.packman);
         for (const auto &pair : scene.ghosts)
         {
             if (getGhostBounds(pair.second).intersects(packmanBounds))
             {
-                scene.gameState = GameState::Lose;
+                updateGameOverLabel(scene.gameOverLabel, "Game Over! You lose.");
+                scene.gameState = GameState::PlayerLosed;
             }
         }
+
+        // Проверяем условие победы - всё печенье съедено.
+        if (getRemainingCookies(scene) == 0)
+        {
+            updateGameOverLabel(scene.gameOverLabel, "Congratulations, you won!");
+            scene.gameState = GameState::PlayerWon;
+        }
     }
+}
+
+std::string getGameSceneWindowTitle(const GameScene &scene)
+{
+    std::string title;
+    switch (scene.gameState)
+    {
+    case GameState::Playing:
+    {
+        unsigned cookiesLeft = getRemainingCookies(scene);
+        title = "Packman: " + std::to_string(cookiesLeft) + " Cookies Left";
+    }
+        break;
+    case GameState::PlayerWon:
+        title = "Packman: Congratulations, You Won!";
+        break;
+    case GameState::PlayerLosed:
+        title = "Packman: Unfortunately, You Lose";
+        break;
+    }
+
+    return title;
 }
 
 void drawGameScene(sf::RenderWindow &window, const GameScene &scene)
@@ -79,7 +123,8 @@ void drawGameScene(sf::RenderWindow &window, const GameScene &scene)
         drawGhost(window, pair.second);
     }
 
-    if (scene.gameState == GameState::Lose)
+    if ((scene.gameState == GameState::PlayerLosed)
+            || (scene.gameState == GameState::PlayerWon))
     {
         window.draw(scene.gameOverBackground);
         window.draw(scene.gameOverLabel);

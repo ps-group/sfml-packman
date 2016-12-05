@@ -8,8 +8,6 @@ static const float BLOCK_SIZE = 32.f;
 static const float EPSILON = std::numeric_limits<float>::epsilon();
 static const float MAX_SHIFT = 0.5f * BLOCK_SIZE;
 static const float MIN_COOKIE_OVERLAP_AREA = 400.f;
-static const size_t FIELD_WIDTH = 25;
-static const size_t FIELD_HEIGHT = 25;
 
 static const float COOKIE_RADIUS = 2.f;
 static const float SUPERCOOKIE_RADIUS = 5.f;
@@ -18,6 +16,12 @@ static const char WALL_MARKER = '#';
 static const char UNREACHABLE_MARKER = '!';
 static const char COOKIE_MARKER = ' ';
 static const char SUPERCOOKIE_MARKER = '$';
+
+// Полноценная версия игрового поля.
+#if 1
+
+static const size_t FIELD_WIDTH = 25;
+static const size_t FIELD_HEIGHT = 25;
 static const char FIELD_MAZE[] =
         "!#######################!"
         "!#          #          #!"
@@ -44,6 +48,20 @@ static const char FIELD_MAZE[] =
         "!# # # #### # #### # # #!"
         "!#          #          #!"
         "!#######################!";
+
+// Отладочная версия игрового поля.
+#else
+
+static const size_t FIELD_WIDTH = 6;
+static const size_t FIELD_HEIGHT = 6;
+static const char FIELD_MAZE[] =
+        "######"
+        "#@ #C#"
+        "#  #B#"
+        "#$ #P#"
+        "#  #I#"
+        "######";
+#endif
 
 static const sf::Color WALL_COLOR = sf::Color(52, 93, 199);
 static const sf::Color ROAD_COLOR = sf::Color(40, 40, 40);
@@ -161,6 +179,26 @@ sf::Vector2f getGhostStartPosition(GhostId ghostId)
     default:
         assert(false);
     }
+}
+
+unsigned countRemainingCookies(const Field &field)
+{
+    unsigned result = 0;
+    for (size_t offset = 0; offset < field.width * field.height; offset++)
+    {
+        const Cell &cell = field.cells[offset];
+        switch (cell.category)
+        {
+        case CellCategory::COOKIE:
+        case CellCategory::SUPERCOOKIE:
+            ++result;
+            break;
+        default:
+            break;
+        }
+    }
+
+    return result;
 }
 
 void initializeField(Field &field)
