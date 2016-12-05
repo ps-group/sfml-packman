@@ -28,7 +28,7 @@ void render(sf::RenderWindow & window, sf::CircleShape & shape)
 
 int main(int, char *[])
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Window Title");
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Packman Game Clone");
     sf::CircleShape packman;
     initializePackman(packman);
 

@@ -3,18 +3,27 @@
 #include "field.h"
 #include "ghost.h"
 #include "packman.h"
+#include <map>
+
+enum class GameState
+{
+    Playing,
+    Lose,
+};
 
 struct GameScene
 {
     Field field;
     Packman packman;
-    Ghost blinky;
-    Ghost pinky;
-    Ghost inky;
-    Ghost clyde;
+    std::map<GhostId, Ghost> ghosts;
+    GameState gameState = GameState::Playing;
+
+    sf::Font arial;
+    sf::RectangleShape gameOverBackground;
+    sf::Text gameOverLabel;
 };
 
-void initializeGameScene(GameScene &scene);
+void initializeGameScene(GameScene &scene, const sf::Vector2f &sceneSize);
 void updateGameScene(GameScene &scene, float elapsedTime);
 void drawGameScene(sf::RenderWindow &window, const GameScene &scene);
 void destroyGameScene(GameScene &scene);

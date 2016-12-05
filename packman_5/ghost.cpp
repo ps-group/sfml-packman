@@ -71,3 +71,8 @@ void drawGhost(sf::RenderWindow &window, const Ghost &ghost)
 {
     window.draw(ghost.shape);
 }
+
+sf::FloatRect getGhostBounds(const Ghost &ghost)
+{
+    return ghost.shape.getGlobalBounds();
+}

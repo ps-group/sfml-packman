@@ -71,3 +71,8 @@ void drawPackman(sf::RenderWindow &window, const Packman &packman)
 {
     window.draw(packman.shape);
 }
+
+sf::FloatRect getPackmanBounds(const Packman &packman)
+{
+    return packman.shape.getGlobalBounds();
+}

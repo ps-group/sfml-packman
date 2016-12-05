@@ -39,7 +39,10 @@ void render(sf::RenderWindow & window, const Packman &packman)
 
 int main(int, char *[])
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Window Title");
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 4;
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Packman Game Clone", sf::Style::Close, settings);
+
     Packman packman;
     initializePackman(packman);
 

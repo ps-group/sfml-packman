@@ -12,3 +12,4 @@ struct Ghost
 void initializeGhost(Ghost & ghost, const sf::Vector2f &position);
 void updateGhost(Ghost &ghost, float elapsedTime, const Field &field);
 void drawGhost(sf::RenderWindow &window, const Ghost &ghost);
+sf::FloatRect getGhostBounds(const Ghost &ghost);

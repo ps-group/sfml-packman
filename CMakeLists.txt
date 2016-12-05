@@ -2,7 +2,6 @@ project(sfml-packman)
 cmake_minimum_required(VERSION 2.8)
 
 if(UNIX)
-set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra")
 set(DEBUG_LIBS sfml-system sfml-audio sfml-graphics sfml-window)
 set(RELEASE_LIBS sfml-system sfml-audio sfml-graphics sfml-window)
@@ -41,3 +40,6 @@ aux_source_directory(packman_6 SRC_LIST_6)
 add_executable(packman_6 ${SRC_LIST_6})
 target_link_libraries(packman_6 debug ${DEBUG_LIBS})
 target_link_libraries(packman_6 optimized ${RELEASE_LIBS})
+
+# Выполняем копирование файлов в выходную директорию
+file(COPY res DESTINATION ${CMAKE_BINARY_DIR})
