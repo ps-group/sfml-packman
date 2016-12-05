@@ -1,6 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+enum class GhostId
+{
+    BLINKY,
+    PINKY,
+    INKY,
+    CLYDE,
+};
+
 enum struct CellCategory
 {
     WALL,
@@ -23,14 +31,13 @@ struct Field
 };
 
 sf::Vector2f getPackmanStartPosition();
-sf::Vector2f getBlinkyStartPosition();
-sf::Vector2f getPinkyStartPosition();
-sf::Vector2f getInkyStartPosition();
-sf::Vector2f getClydeStartPosition();
+sf::Vector2f getGhostStartPosition(GhostId ghostId);
 
 void initializeField(Field &field);
 void drawField(sf::RenderWindow &window, const Field &field);
 bool checkFieldWallsCollision(const Field &field, const sf::FloatRect &oldBounds, sf::Vector2f &movement);
+
 // Возвращает количество поглощённого печенья.
 unsigned eatAllCookiesInBounds(Field &field, const sf::FloatRect &bounds);
+
 void destroyField(Field &field);

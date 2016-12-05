@@ -36,7 +36,7 @@ int main(int, char *[])
 
     sf::Clock clock;
     GameScene scene;
-    initializeGameScene(scene);
+    initializeGameScene(scene, sf::Vector2f(window.getSize()));
 
     while (window.isOpen())
     {

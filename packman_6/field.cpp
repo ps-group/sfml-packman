@@ -2,6 +2,7 @@
 #include "packman.h"
 #include <cmath>
 #include <limits>
+#include <cassert>
 
 static const float BLOCK_SIZE = 32.f;
 static const float EPSILON = std::numeric_limits<float>::epsilon();
@@ -145,24 +146,21 @@ sf::Vector2f getPackmanStartPosition()
     return getStartPosition('@');
 }
 
-sf::Vector2f getBlinkyStartPosition()
+sf::Vector2f getGhostStartPosition(GhostId ghostId)
 {
-    return getStartPosition('B');
-}
-
-sf::Vector2f getPinkyStartPosition()
-{
-    return getStartPosition('P');
-}
-
-sf::Vector2f getInkyStartPosition()
-{
-    return getStartPosition('I');
-}
-
-sf::Vector2f getClydeStartPosition()
-{
-    return getStartPosition('C');
+    switch (ghostId)
+    {
+    case GhostId::BLINKY:
+        return getStartPosition('B');
+    case GhostId::PINKY:
+        return getStartPosition('P');
+    case GhostId::INKY:
+        return getStartPosition('I');
+    case GhostId::CLYDE:
+        return getStartPosition('C');
+    default:
+        assert(false);
+    }
 }
 
 void initializeField(Field &field)
