@@ -15,9 +15,13 @@ enum struct Direction
 
 struct Packman
 {
-    sf::CircleShape shape;
+    sf::ConvexShape topShape;
+    sf::ConvexShape bottomShape;
     Direction direction;
     unsigned eatenCookies;
+    sf::Vector2f position; // позиция в пикселях.
+    float orientationDegrees; // угол в градусах.
+    float animationPhase; // фаза анимации от 0 до 1.
 };
 
 void initializePackman(Packman & packman);

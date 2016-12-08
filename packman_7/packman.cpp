@@ -1,9 +1,57 @@
 #include "packman.h"
 #include "field.h"
+#include "utils.h"
+#include <math.h>
 
 static const sf::Color PACKMAN_COLOR = sf::Color(255, 216, 0);
 static const float PACKMAN_SPEED = 120.f; // pixels per second.
 static const float PACKMAN_RADIUS = 16.0f; // pixels
+static const float PACKMAN_MOUTH_ANGLE = 90.f; // degrees.
+static const float PACKMAN_ANIMATION_PERIOD = 0.3f;
+
+/// angle - polar angle in degrees
+static sf::Vector2f getRadialPoint(float angle, float radius)
+{
+    return utils::polarToDecartian(radius, angle - 90);
+}
+
+static void assignShape(sf::ConvexShape & shape, std::vector<sf::Vector2f> const& points)
+{
+    const unsigned pointCount = unsigned(points.size());
+    shape.setPointCount(pointCount);
+    for (unsigned i = 0; i < pointCount; ++i)
+    {
+        shape.setPoint(i, points[i]);
+    }
+}
+
+static void assignPackmanShape(sf::ConvexShape & topShape,
+                               sf::ConvexShape & bottomShape,
+                               const float animationPhase)
+{
+    // Вычисляем половину угла раскрытого рта персонажа packman.
+    const float deviationPhase = 2.f * fabsf(0.5f - animationPhase);
+    const float deviationAngle = 0.5 * deviationPhase * PACKMAN_MOUTH_ANGLE;
+
+    const float radius = PACKMAN_RADIUS;
+    std::vector<sf::Vector2f> points;
+    sf::Vector2f center(0, 0);
+
+    for (float angle = 180.f; angle >= deviationAngle; angle -= 5.f)
+    {
+        points.push_back(getRadialPoint(angle, radius));
+    }
+    points.push_back(center);
+    assignShape(topShape, points);
+    points.clear();
+
+    for (float angle = 180.f; angle <= 360.f - deviationAngle; angle += 5.f)
+    {
+        points.push_back(getRadialPoint(angle, radius));
+    }
+    points.push_back(center);
+    assignShape(bottomShape, points);
+}
 
 static void updatePackmanDirection(Packman &packman)
 {
@@ -12,31 +60,38 @@ static void updatePackmanDirection(Packman &packman)
             || sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
         packman.direction = Direction::UP;
+        packman.orientationDegrees = 0;
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
              || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
         packman.direction = Direction::DOWN;
+        packman.orientationDegrees = 180;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)
             || sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         packman.direction = Direction::LEFT;
+        packman.orientationDegrees = 270;
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)
              || sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
         packman.direction = Direction::RIGHT;
+        packman.orientationDegrees = 90;
     }
 }
 
 void initializePackman(Packman &packman)
 {
     packman.direction = Direction::NONE;
-    packman.shape.setRadius(PACKMAN_RADIUS);
-    packman.shape.setFillColor(PACKMAN_COLOR);
-    packman.shape.setPosition(getPackmanStartPosition());
+    packman.position = getPackmanStartPosition();
     packman.eatenCookies = 0;
+    packman.orientationDegrees = 0;
+    packman.animationPhase = 0;
+
+    packman.topShape.setFillColor(sf::Color::Yellow);
+    packman.bottomShape.setFillColor(sf::Color::Yellow);
 }
 
 void updatePackman(Packman &packman, float elapsedTime, Field &field)
@@ -63,21 +118,44 @@ void updatePackman(Packman &packman, float elapsedTime, Field &field)
     case Direction::NONE:
         break;
     }
-    if (checkFieldWallsCollision(field, packman.shape.getGlobalBounds(), movement))
+    if (checkFieldWallsCollision(field, getPackmanBounds(packman), movement))
     {
         // Останавливаем пакмана при столкновении
         packman.direction = Direction::NONE;
     }
-    packman.eatenCookies += eatAllCookiesInBounds(field, packman.shape.getGlobalBounds());
-    packman.shape.move(movement);
+    packman.eatenCookies += eatAllCookiesInBounds(field, getPackmanBounds(packman));
+    packman.position += movement;
+
+    // Обновляем фазу анимации персонажа
+    //  (анимация продолжается только в движении)
+    if (packman.direction == Direction::NONE)
+    {
+        packman.animationPhase = 0;
+    }
+    else
+    {
+        const float deltaPhase = elapsedTime / PACKMAN_ANIMATION_PERIOD;
+        packman.animationPhase = fmodf(packman.animationPhase + deltaPhase, 1.f);
+    }
+
+    // Устанавливаем границы фигуры пакмана.
+    assignPackmanShape(packman.topShape, packman.bottomShape, packman.animationPhase);
 }
 
 void drawPackman(sf::RenderWindow &window, const Packman &packman)
 {
-    window.draw(packman.shape);
+    sf::RenderStates states;
+    states.transform.translate(packman.position);
+    states.transform.rotate(packman.orientationDegrees);
+
+    window.draw(packman.topShape, states);
+    window.draw(packman.bottomShape, states);
 }
 
 sf::FloatRect getPackmanBounds(const Packman &packman)
 {
-    return packman.shape.getGlobalBounds();
+    return sf::FloatRect(packman.position.x - PACKMAN_RADIUS,
+                         packman.position.y - PACKMAN_RADIUS,
+                         2.f * PACKMAN_RADIUS,
+                         2.f * PACKMAN_RADIUS);
 }
