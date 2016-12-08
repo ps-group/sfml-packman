@@ -11,35 +11,23 @@ set(DEBUG_LIBS sfml-system-d sfml-audio-d sfml-graphics-d sfml-window-d opengl32
 set(RELEASE_LIBS sfml-system sfml-audio sfml-graphics sfml-window opengl32 freetype jpeg winmm)
 endif(UNIX)
 
-aux_source_directory(packman_1 SRC_LIST_1)
-add_executable(packman_1 ${SRC_LIST_1})
-target_link_libraries(packman_1 debug ${DEBUG_LIBS})
-target_link_libraries(packman_1 optimized ${RELEASE_LIBS})
+macro(add_lesson NUM)
+    file(GLOB SRC_LESSON_${NUM} "packman_${NUM}/*.cpp" "packman_${NUM}/*.h")
+    add_executable(packman_${NUM} ${SRC_LESSON_${NUM}})
+    target_link_libraries(packman_${NUM} debug ${DEBUG_LIBS})
+    target_link_libraries(packman_${NUM} optimized ${RELEASE_LIBS})
+endmacro(add_lesson)
 
-aux_source_directory(packman_2 SRC_LIST_2)
-add_executable(packman_2 ${SRC_LIST_2})
-target_link_libraries(packman_2 debug ${DEBUG_LIBS})
-target_link_libraries(packman_2 optimized ${RELEASE_LIBS})
+# Chapter 1
+add_lesson(1)
+add_lesson(2)
+add_lesson(3)
+add_lesson(4)
+add_lesson(5)
+add_lesson(6)
 
-aux_source_directory(packman_3 SRC_LIST_3)
-add_executable(packman_3 ${SRC_LIST_3})
-target_link_libraries(packman_3 debug ${DEBUG_LIBS})
-target_link_libraries(packman_3 optimized ${RELEASE_LIBS})
-
-aux_source_directory(packman_4 SRC_LIST_4)
-add_executable(packman_4 ${SRC_LIST_4})
-target_link_libraries(packman_4 debug ${DEBUG_LIBS})
-target_link_libraries(packman_4 optimized ${RELEASE_LIBS})
-
-aux_source_directory(packman_5 SRC_LIST_5)
-add_executable(packman_5 ${SRC_LIST_5})
-target_link_libraries(packman_5 debug ${DEBUG_LIBS})
-target_link_libraries(packman_5 optimized ${RELEASE_LIBS})
-
-aux_source_directory(packman_6 SRC_LIST_6)
-add_executable(packman_6 ${SRC_LIST_6})
-target_link_libraries(packman_6 debug ${DEBUG_LIBS})
-target_link_libraries(packman_6 optimized ${RELEASE_LIBS})
+# Chapter 2
+add_lesson(7)
 
 # Выполняем копирование файлов в выходную директорию
 file(COPY res DESTINATION ${CMAKE_BINARY_DIR})
