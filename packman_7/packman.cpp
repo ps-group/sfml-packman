@@ -87,7 +87,7 @@ void initializePackman(Packman &packman)
     packman.direction = Direction::NONE;
     packman.position = getPackmanStartPosition();
     packman.eatenCookies = 0;
-    packman.orientationDegrees = 0;
+    packman.orientationDegrees = 90;
     packman.animationPhase = 0;
 
     packman.topShape.setFillColor(sf::Color::Yellow);
@@ -144,8 +144,11 @@ void updatePackman(Packman &packman, float elapsedTime, Field &field)
 
 void drawPackman(sf::RenderWindow &window, const Packman &packman)
 {
+    // Настраиваем 2D трансформацию для рисования двух половин пакмана.
     sf::RenderStates states;
+    // Применяем перемещение.
     states.transform.translate(packman.position);
+    // Применяем вращение вокруг собственного центра.
     states.transform.rotate(packman.orientationDegrees);
 
     window.draw(packman.topShape, states);
