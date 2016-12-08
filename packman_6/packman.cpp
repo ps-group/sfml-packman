@@ -8,19 +8,23 @@ static const float PACKMAN_RADIUS = 16.0f; // pixels
 static void updatePackmanDirection(Packman &packman)
 {
     packman.direction = Direction::NONE;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
+            || sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
         packman.direction = Direction::UP;
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
+             || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
         packman.direction = Direction::DOWN;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)
+            || sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         packman.direction = Direction::LEFT;
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)
+             || sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
         packman.direction = Direction::RIGHT;
     }
