@@ -1,9 +1,17 @@
 #include "ghost.h"
 #include "field.h"
 
-static const sf::Color GHOST_COLOR = sf::Color(200, 32, 200);
 static const float GHOST_SPEED = 60.f; // pixels per second.
-static const float GHOST_RADIUS = 16.f; // pixels
+static const float GHOST_SIZE = 32.f; // pixels
+static const sf::IntRect FRAME_EYES_LEFT(0, 0, 32, 32);
+static const sf::IntRect FRAME_EYES_CENTER(32, 0, 32, 32);
+static const sf::IntRect FRAME_EYES_RIGHT(64, 0, 32, 32);
+
+// Размещаем переменные, указанные в заголовке как `extern`.
+const char BLUE_GHOST_TEXTURE[] = "res/ghost-blue.png";
+const char PINK_GHOST_TEXTURE[] = "res/ghost-pink.png";
+const char RED_GHOST_TEXTURE[] = "res/ghost-red.png";
+const char ORANGE_GHOST_TEXTURE[] = "res/ghost-orange.png";
 
 static void changeGhostDirection(Ghost &ghost)
 {
@@ -27,12 +35,20 @@ static void changeGhostDirection(Ghost &ghost)
     }
 }
 
-void initializeGhost(Ghost &ghost, const sf::Vector2f &position)
+bool initializeGhost(Ghost &ghost, const sf::Vector2f &position, const std::__cxx11::string &texturePath)
 {
+    if (!ghost.texture.loadFromFile(texturePath))
+    {
+        return false;
+    }
+
     ghost.direction = Direction::NONE;
-    ghost.shape.setRadius(GHOST_RADIUS);
-    ghost.shape.setFillColor(GHOST_COLOR);
+    ghost.shape.setSize({GHOST_SIZE, GHOST_SIZE});
     ghost.shape.setPosition(position);
+    ghost.shape.setTexture(&ghost.texture);
+    ghost.shape.setTextureRect(FRAME_EYES_CENTER);
+
+    return true;
 }
 
 void updateGhost(Ghost &ghost, float elapsedTime, const Field &field)
@@ -65,6 +81,20 @@ void updateGhost(Ghost &ghost, float elapsedTime, const Field &field)
         changeGhostDirection(ghost);
     }
     ghost.shape.move(movement);
+    switch (ghost.direction)
+    {
+    case Direction::LEFT:
+        ghost.shape.setTextureRect(FRAME_EYES_LEFT);
+        break;
+    case Direction::RIGHT:
+        ghost.shape.setTextureRect(FRAME_EYES_RIGHT);
+        break;
+    case Direction::DOWN:
+    case Direction::UP:
+    case Direction::NONE:
+        ghost.shape.setTextureRect(FRAME_EYES_CENTER);
+        break;
+    }
 }
 
 void drawGhost(sf::RenderWindow &window, const Ghost &ghost)

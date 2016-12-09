@@ -4,14 +4,16 @@
 
 static const sf::Color TRANSPARENT_GRAY = sf::Color(200, 200, 200, 200);
 
-static void initializeGhostById(std::map<GhostId, Ghost> &ghosts, GhostId ghostId)
+static bool initializeGhostById(std::map<GhostId, Ghost> &ghosts,
+                                GhostId ghostId,
+                                const std::string &texturePath)
 {
     // В C++ `operator[]` для контейнеров STL создаёт запись,
     //  если переданного ключа ещё нет в map.
     // В отличии от него, метод `.at()` бросает исключение,
     //  если переданного ключа ещё нет в map.
     Ghost &ghost = ghosts[ghostId];
-    initializeGhost(ghost, getGhostStartPosition(ghostId));
+    return initializeGhost(ghost, getGhostStartPosition(ghostId), texturePath);
 }
 
 static unsigned getRemainingCookies(const GameScene &scene)
@@ -37,10 +39,15 @@ void initializeGameScene(GameScene &scene, const sf::Vector2f &sceneSize)
     initializeField(scene.field);
     initializePackman(scene.packman);
 
-    initializeGhostById(scene.ghosts, GhostId::BLINKY);
-    initializeGhostById(scene.ghosts, GhostId::PINKY);
-    initializeGhostById(scene.ghosts, GhostId::INKY);
-    initializeGhostById(scene.ghosts, GhostId::CLYDE);
+    succeed  = initializeGhostById(scene.ghosts, GhostId::BLINKY, BLUE_GHOST_TEXTURE)
+            && initializeGhostById(scene.ghosts, GhostId::PINKY, PINK_GHOST_TEXTURE)
+            && initializeGhostById(scene.ghosts, GhostId::INKY, RED_GHOST_TEXTURE)
+            && initializeGhostById(scene.ghosts, GhostId::CLYDE, ORANGE_GHOST_TEXTURE);
+    if (!succeed)
+    {
+        assert(false);
+        exit(1);
+    }
 
     scene.gameState = GameState::Playing;
     scene.totalCookieCount = countRemainingCookies(scene.field);

@@ -6,7 +6,8 @@
 static const sf::Color PACKMAN_COLOR = sf::Color(255, 216, 0);
 static const float PACKMAN_SPEED = 120.f; // pixels per second.
 static const float PACKMAN_RADIUS = 16.0f; // pixels
-static const float PACKMAN_MOUTH_ANGLE = 90.f; // degrees.
+static const float PACKMAN_VISIBLE_RADIUS = 12.0f; // pixels
+static const float PACKMAN_MOUTH_ANGLE = 100.f; // degrees.
 static const float PACKMAN_ANIMATION_PERIOD = 0.3f;
 
 /// angle - polar angle in degrees
@@ -33,9 +34,9 @@ static void assignPackmanShape(sf::ConvexShape & topShape,
     const float deviationPhase = 2.f * fabsf(0.5f - animationPhase);
     const float deviationAngle = 0.5 * deviationPhase * PACKMAN_MOUTH_ANGLE;
 
-    const float radius = PACKMAN_RADIUS;
+    const float radius = PACKMAN_VISIBLE_RADIUS;
     std::vector<sf::Vector2f> points;
-    sf::Vector2f center(0, 0);
+    sf::Vector2f center(0, 0.25f * radius);
 
     for (float angle = 180.f; angle >= deviationAngle; angle -= 5.f)
     {

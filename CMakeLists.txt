@@ -28,6 +28,7 @@ add_lesson(6)
 
 # Chapter 2
 add_lesson(7)
+add_lesson(8)
 
 # Выполняем копирование файлов в выходную директорию
 file(COPY res DESTINATION ${CMAKE_BINARY_DIR})
