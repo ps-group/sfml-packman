@@ -4,16 +4,23 @@
 
 static const sf::Color TRANSPARENT_GRAY = sf::Color(200, 200, 200, 200);
 
-static bool initializeGhostById(std::map<GhostId, Ghost> &ghosts,
-                                GhostId ghostId,
-                                const std::string &texturePath)
+static const std::map<GhostId, std::string> TEXTURE_MAPPING = {
+    { GhostId::BLINKY, RED_GHOST_TEXTURE },
+    { GhostId::PINKY, PINK_GHOST_TEXTURE },
+    { GhostId::INKY, BLUE_GHOST_TEXTURE },
+    { GhostId::CLYDE, ORANGE_GHOST_TEXTURE },
+};
+
+static bool initializeGhostById(std::map<GhostId, Ghost> &ghosts, GhostId id)
 {
     // В C++ `operator[]` для контейнеров STL создаёт запись,
     //  если переданного ключа ещё нет в map.
-    // В отличии от него, метод `.at()` бросает исключение,
-    //  если переданного ключа ещё нет в map.
-    Ghost &ghost = ghosts[ghostId];
-    return initializeGhost(ghost, getGhostStartPosition(ghostId), texturePath);
+    Ghost &ghost = ghosts[id];
+    // В отличии от `operator[]`, метод `.at()` бросает исключение,
+    //  если переданного ключа нет в map.
+    const std::string texturePath = TEXTURE_MAPPING.at[id];
+
+    return initializeGhost(ghost, getGhostStartPosition(id), texturePath);
 }
 
 static unsigned getRemainingCookies(const GameScene &scene)
@@ -39,10 +46,10 @@ void initializeGameScene(GameScene &scene, const sf::Vector2f &sceneSize)
     initializeField(scene.field);
     initializePackman(scene.packman);
 
-    succeed  = initializeGhostById(scene.ghosts, GhostId::BLINKY, BLUE_GHOST_TEXTURE)
-            && initializeGhostById(scene.ghosts, GhostId::PINKY, PINK_GHOST_TEXTURE)
-            && initializeGhostById(scene.ghosts, GhostId::INKY, RED_GHOST_TEXTURE)
-            && initializeGhostById(scene.ghosts, GhostId::CLYDE, ORANGE_GHOST_TEXTURE);
+    succeed  = initializeGhostById(scene.ghosts, GhostId::BLINKY)
+            && initializeGhostById(scene.ghosts, GhostId::PINKY)
+            && initializeGhostById(scene.ghosts, GhostId::INKY)
+            && initializeGhostById(scene.ghosts, GhostId::CLYDE);
     if (!succeed)
     {
         assert(false);
