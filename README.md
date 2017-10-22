@@ -6,5 +6,40 @@
 
 <div>
 <img align="left" src="img/preview_1.png">
-<p><a href="">В 1-м примере</a> заложен основной цикл игры</p>
+<p><a href="pacman_1">В 1-м примере</a> в программе будет заложен основной цикл игры.</p>
+</div>
+
+<div>
+<img align="left" src="img/preview_2.png">
+<p><a href="pacman_2">Во 2-м примере</a> добавлено управление персонажем.</p>
+</div>
+
+<div>
+<img align="left" src="img/preview_3.png">
+<p><a href="pacman_3">В 3-м примере</a> заложен основной цикл игры.</p>
+</div>
+
+<div>
+<img align="left" src="img/preview_4.png">
+<p><a href="pacman_4">В 4-м примере</a> заложен основной цикл игры.</p>
+</div>
+
+<div>
+<img align="left" src="img/preview_5.png">
+<p><a href="pacman_5">В 5-м примере</a> заложен основной цикл игры.</p>
+</div>
+
+<div>
+<img align="left" src="img/preview_6.png">
+<p><a href="pacman_6">В 6-м примере</a> заложен основной цикл игры.</p>
+</div>
+
+<div>
+<img align="left" src="img/preview_7.png">
+<p><a href="pacman_7">В 7-м примере</a> заложен основной цикл игры.</p>
+</div>
+
+<div>
+<img align="left" src="img/preview_8.png">
+<p><a href="pacman_8">В 8-м примере</a> заложен основной цикл игры.</p>
 </div>
