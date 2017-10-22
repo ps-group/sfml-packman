@@ -35,7 +35,7 @@ static void changeGhostDirection(Ghost &ghost)
     }
 }
 
-bool initializeGhost(Ghost &ghost, const sf::Vector2f &position, const std::__cxx11::string &texturePath)
+bool initializeGhost(Ghost &ghost, const sf::Vector2f &position, const std::string &texturePath)
 {
     if (!ghost.texture.loadFromFile(texturePath))
     {

@@ -34,7 +34,7 @@ void initializeGameScene(GameScene &scene, const sf::Vector2f &sceneSize)
     scene.gameOverBackground.setSize(sceneSize);
 
     scene.gameOverLabel.setFont(scene.arial);
-    scene.gameOverLabel.setColor(sf::Color::Black);
+    scene.gameOverLabel.setFillColor(sf::Color::Black);
     scene.gameOverLabel.setPosition(0.5f * sceneSize);
     scene.gameOverLabel.setString("Game Over! You lose.");
     utils::centerizeTextOrigin(scene.gameOverLabel);

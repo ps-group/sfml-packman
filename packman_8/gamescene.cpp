@@ -18,7 +18,7 @@ static bool initializeGhostById(std::map<GhostId, Ghost> &ghosts, GhostId id)
     Ghost &ghost = ghosts[id];
     // В отличии от `operator[]`, метод `.at()` бросает исключение,
     //  если переданного ключа нет в map.
-    const std::string texturePath = TEXTURE_MAPPING.at[id];
+    const std::string texturePath = TEXTURE_MAPPING.at(id);
 
     return initializeGhost(ghost, getGhostStartPosition(id), texturePath);
 }
@@ -63,7 +63,7 @@ void initializeGameScene(GameScene &scene, const sf::Vector2f &sceneSize)
     scene.gameOverBackground.setSize(sceneSize);
 
     scene.gameOverLabel.setFont(scene.arial);
-    scene.gameOverLabel.setColor(sf::Color::Black);
+    scene.gameOverLabel.setFillColor(sf::Color::Black);
     scene.gameOverLabel.setPosition(0.5f * sceneSize);
 }
 
