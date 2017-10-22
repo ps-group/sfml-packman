@@ -1,7 +1,7 @@
-#include <SFML/Graphics.hpp>
 #include "gamescene.h"
+#include <SFML/Graphics.hpp>
 
-void handleEvents(sf::RenderWindow & window)
+void handleEvents(sf::RenderWindow& window)
 {
     sf::Event event;
     while (window.pollEvent(event))
@@ -14,25 +14,25 @@ void handleEvents(sf::RenderWindow & window)
     }
 }
 
-void update(sf::Clock &clock, GameScene &scene)
+void update(sf::Clock& clock, GameScene& scene)
 {
     const float elapsedTime = clock.getElapsedTime().asSeconds();
     clock.restart();
     updateGameScene(scene, elapsedTime);
 }
 
-void render(sf::RenderWindow & window, const GameScene &scene)
+void render(sf::RenderWindow& window, const GameScene& scene)
 {
     window.clear();
     drawGameScene(window, scene);
     window.display();
 }
 
-int main(int, char *[])
+int main(int, char* [])
 {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 4;
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Packman Game Clone", sf::Style::Close, settings);
+    sf::RenderWindow window(sf::VideoMode(800, 800), "PacMan Game Clone", sf::Style::Close, settings);
 
     sf::Clock clock;
     GameScene scene;

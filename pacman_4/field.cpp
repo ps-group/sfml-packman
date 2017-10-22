@@ -4,38 +4,37 @@ static const float BLOCK_SIZE = 25.f;
 static const size_t FIELD_WIDTH = 32;
 static const size_t FIELD_HEIGHT = 24;
 
-static const char FIELD_MAZE[] =
-        "################################"
-        "#     #                        #"
-        "#     #                        #"
-        "#     #                        #"
-        "#  @  #                        #"
-        "#                              #"
-        "#           ####################"
-        "#                              #"
-        "#                              #"
-        "#                  #           #"
-        "#                  #           #"
-        "############       #           #"
-        "#                  #           #"
-        "#                  #           #"
-        "#                  #           #"
-        "#                  #           #"
-        "#                  #           #"
-        "#                  #           #"
-        "#             ############     #"
-        "#                              #"
-        "#                              #"
-        "#                              #"
-        "#                              #"
-        "################################";
+static const char FIELD_MAZE[] = "################################"
+                                 "#     #                        #"
+                                 "#     #                        #"
+                                 "#     #                        #"
+                                 "#  @  #                        #"
+                                 "#                              #"
+                                 "#           ####################"
+                                 "#                              #"
+                                 "#                              #"
+                                 "#                  #           #"
+                                 "#                  #           #"
+                                 "############       #           #"
+                                 "#                  #           #"
+                                 "#                  #           #"
+                                 "#                  #           #"
+                                 "#                  #           #"
+                                 "#                  #           #"
+                                 "#                  #           #"
+                                 "#             ############     #"
+                                 "#                              #"
+                                 "#                              #"
+                                 "#                              #"
+                                 "#                              #"
+                                 "################################";
 
-static const sf::Color BROWN_COLOR = sf::Color(163, 58, 3);
-static const sf::Color WHITE_COLOR = sf::Color(255, 255, 255);
+static const sf::Color WALL_COLOR = sf::Color(52, 93, 199);
+static const sf::Color ROAD_COLOR = sf::Color(40, 40, 40);
 
-static sf::FloatRect moveRect(const sf::FloatRect &rect, sf::Vector2f &offset)
+static sf::FloatRect moveRect(const sf::FloatRect& rect, sf::Vector2f& offset)
 {
-    return {rect.left + offset.x, rect.top + offset.y, rect.width, rect.height};
+    return { rect.left + offset.x, rect.top + offset.y, rect.width, rect.height };
 }
 
 // Находит символ '@' в исходной карте лабиринта.
@@ -55,7 +54,7 @@ sf::Vector2f getPackmanStartPosition()
     return { 0, 0 };
 }
 
-void initializeField(Field &field)
+void initializeField(Field& field)
 {
     field.width = FIELD_WIDTH;
     field.height = FIELD_HEIGHT;
@@ -70,14 +69,14 @@ void initializeField(Field &field)
             if (FIELD_MAZE[offset] == '#')
             {
                 category = CellCategory::WALL;
-                color = BROWN_COLOR;
+                color = WALL_COLOR;
             }
             else
             {
                 category = CellCategory::ROAD;
-                color = WHITE_COLOR;
+                color = ROAD_COLOR;
             }
-            Cell &cell = field.cells[offset];
+            Cell& cell = field.cells[offset];
             cell.category = category;
             cell.bounds.setPosition(x * BLOCK_SIZE, y * BLOCK_SIZE);
             cell.bounds.setSize(sf::Vector2f(BLOCK_SIZE, BLOCK_SIZE));
@@ -86,7 +85,7 @@ void initializeField(Field &field)
     }
 }
 
-void drawField(sf::RenderWindow &window, const Field &field)
+void drawField(sf::RenderWindow& window, const Field& field)
 {
     for (size_t i = 0; i < field.width * field.height; i++)
     {
@@ -97,13 +96,13 @@ void drawField(sf::RenderWindow &window, const Field &field)
 // Модифицирует вектор перемещения, избегая столкновения
 // прямоугольника `rect` со стенами лабиринта в поле `field`.
 // Возвращает `true`, если вектор перемещения изменён.
-bool checkFieldWallsCollision(const Field &field, const sf::FloatRect &oldBounds, sf::Vector2f &movement)
+bool checkFieldWallsCollision(const Field& field, const sf::FloatRect& oldBounds, sf::Vector2f& movement)
 {
     sf::FloatRect newBounds = moveRect(oldBounds, movement);
     bool changed = false;
     for (size_t i = 0, n = field.width * field.height; i < n; i++)
     {
-        const Cell &cell = field.cells[i];
+        const Cell& cell = field.cells[i];
         if (cell.category == CellCategory::ROAD)
         {
             continue;
@@ -135,7 +134,7 @@ bool checkFieldWallsCollision(const Field &field, const sf::FloatRect &oldBounds
     return changed;
 }
 
-void destroyField(Field &field)
+void destroyField(Field& field)
 {
     delete[] field.cells;
 }

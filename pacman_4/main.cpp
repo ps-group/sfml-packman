@@ -1,8 +1,8 @@
-#include <SFML/Graphics.hpp>
-#include "packman.h"
 #include "field.h"
+#include "packman.h"
+#include <SFML/Graphics.hpp>
 
-void handleEvents(sf::RenderWindow & window)
+void handleEvents(sf::RenderWindow& window)
 {
     sf::Event event;
     while (window.pollEvent(event))
@@ -15,14 +15,14 @@ void handleEvents(sf::RenderWindow & window)
     }
 }
 
-void update(sf::Clock &clock, Packman &packman, const Field &field)
+void update(sf::Clock& clock, Packman& packman, const Field& field)
 {
     const float elapsedTime = clock.getElapsedTime().asSeconds();
     clock.restart();
     updatePackman(packman, elapsedTime, field);
 }
 
-void render(sf::RenderWindow & window, const Packman &packman, const Field &field)
+void render(sf::RenderWindow& window, const Packman& packman, const Field& field)
 {
     window.clear();
     drawField(window, field);
@@ -31,11 +31,11 @@ void render(sf::RenderWindow & window, const Packman &packman, const Field &fiel
     window.display();
 }
 
-int main(int, char *[])
+int main(int, char* [])
 {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 4;
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Packman Game Clone", sf::Style::Close, settings);
+    sf::RenderWindow window(sf::VideoMode(800, 600), "PacMan Game Clone", sf::Style::Close, settings);
 
     Packman packman;
     initializePackman(packman);

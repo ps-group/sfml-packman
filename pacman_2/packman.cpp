@@ -1,11 +1,18 @@
 #include "packman.h"
 
-static const sf::Color PACKMAN_COLOR = sf::Color(255, 216, 0);
-static const float PACKMAN_SPEED = 20.f; // pixels per second.
-static const float PACKMAN_RADIUS = 20.f; // pixels
-static const sf::Vector2f PACKMAN_INITIAL_POSITION = {100, 0}; // pixels.
+// Скорость движения, пикселей в секунду.
+constexpr float PACKMAN_SPEED = 20.f;
 
-void initializePackman(Packman &packman)
+// Радиус фигуры пакмана в пикселях.
+constexpr float PACKMAN_RADIUS = 20.f;
+
+// RGB-цвет заливки пакмана/
+const sf::Color PACKMAN_COLOR = sf::Color(255, 216, 0);
+
+// Начальная позиция пакмана в пикселях.
+static const sf::Vector2f PACKMAN_INITIAL_POSITION = { 100, 0 };
+
+void initializePackman(Packman& packman)
 {
     packman.direction = Direction::NONE;
     packman.shape.setRadius(PACKMAN_RADIUS);
@@ -13,7 +20,7 @@ void initializePackman(Packman &packman)
     packman.shape.setPosition(PACKMAN_INITIAL_POSITION);
 }
 
-void updatePackman(Packman &packman, float elapsedTime)
+void updatePackman(Packman& packman, float elapsedTime)
 {
     const float step = PACKMAN_SPEED * elapsedTime;
     sf::Vector2f position = packman.shape.getPosition();
@@ -37,7 +44,7 @@ void updatePackman(Packman &packman, float elapsedTime)
     packman.shape.setPosition(position);
 }
 
-bool handlePackmanKeyPress(const sf::Event::KeyEvent &event, Packman &packman)
+bool handlePackmanKeyPress(const sf::Event::KeyEvent& event, Packman& packman)
 {
     bool handled = true;
     switch (event.code)
@@ -61,7 +68,7 @@ bool handlePackmanKeyPress(const sf::Event::KeyEvent &event, Packman &packman)
     return handled;
 }
 
-bool handlePackmanKeyRelease(const sf::Event::KeyEvent &event, Packman &packman)
+bool handlePackmanKeyRelease(const sf::Event::KeyEvent& event, Packman& packman)
 {
     bool handled = true;
     switch (event.code)

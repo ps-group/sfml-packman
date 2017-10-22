@@ -1,7 +1,25 @@
-#include <SFML/Graphics.hpp>
 #include "packman.h"
+#include <SFML/Graphics.hpp>
 
-void handleEvents(sf::RenderWindow & window, Packman &packman)
+// -- объявления констант --
+constexpr unsigned ANTIALIASING_LEVEL = 8;
+constexpr unsigned WINDOW_WIDTH = 800;
+constexpr unsigned WINDOW_HEIGHT = 600;
+constexpr unsigned MAX_FPS = 60;
+
+// Функция создаёт окно приложения.
+void createWindow(sf::RenderWindow& window)
+{
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = ANTIALIASING_LEVEL;
+    window.create(
+        sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
+        "PacMan Game Clone", sf::Style::Default, settings);
+    window.setFramerateLimit(MAX_FPS);
+}
+
+// Функция обрабатывает все события, скопившиеся в очереди событий SFML.
+void handleEvents(sf::RenderWindow& window, Packman& packman)
 {
     sf::Event event;
     while (window.pollEvent(event))
@@ -23,31 +41,31 @@ void handleEvents(sf::RenderWindow & window, Packman &packman)
     }
 }
 
-void update(sf::Clock &clock, Packman &packman)
+// Функция обновляет состояние объектов на сцене.
+void update(sf::Clock& clock, Packman& packman)
 {
     const float elapsedTime = clock.getElapsedTime().asSeconds();
     clock.restart();
     updatePackman(packman, elapsedTime);
 }
 
-void render(sf::RenderWindow & window, const Packman &packman)
+// Функция рисует объекты на сцене.
+void render(sf::RenderWindow& window, const Packman& packman)
 {
     window.clear();
     window.draw(packman.shape);
     window.display();
 }
 
-int main(int, char *[])
+int main(int, char* [])
 {
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 4;
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Packman Game Clone", sf::Style::Close, settings);
+    sf::RenderWindow window;
+    createWindow(window);
 
     Packman packman;
     initializePackman(packman);
 
     sf::Clock clock;
-
     while (window.isOpen())
     {
         handleEvents(window, packman);
